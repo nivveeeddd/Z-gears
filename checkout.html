@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Checkout | Z Gears</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="checkout-body">
+
+  <!-- Nav Header -->
+  <nav class="navbar reveal-on-load" style="background: rgba(5, 5, 8, 0.95);">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Z <span>GEARS</span></a>
+      <div style="font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem;">
+        🔒 Secure 256-bit SSL Checkout
+      </div>
+      <a href="index.html" class="nav-cta" style="background: transparent; color: var(--text-primary); border: 1px solid var(--border-color);">Back to Store</a>
+    </div>
+  </nav>
+
+  <!-- Checkout Grid -->
+  <main class="checkout-container">
+    
+    <!-- Left Column: Shipping & Payment Form -->
+    <section class="checkout-form-section">
+      
+      <!-- Shipping Details -->
+      <div class="checkout-card">
+        <h3>1. Shipping Information</h3>
+        <form id="checkout-form" onsubmit="handleOrderSubmit(event)">
+          
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="first-name">First Name</label>
+              <input type="text" id="first-name" required placeholder="John">
+            </div>
+            <div class="form-group">
+              <label for="last-name">Last Name</label>
+              <input type="text" id="last-name" required placeholder="Doe">
+            </div>
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" required placeholder="john@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" required placeholder="9876543210" pattern="[0-9]{10}">
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="address">Street Address</label>
+            <input type="text" id="address" required placeholder="House No, Apartment, Street Name">
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="city">City</label>
+              <input type="text" id="city" required placeholder="Mumbai">
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" id="state" required placeholder="Maharashtra">
+            </div>
+          </div>
+
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="pincode">PIN Code</label>
+              <input type="text" id="pincode" required placeholder="400001" pattern="[0-9]{6}">
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country">
+                <option value="India">India</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Payment Section -->
+      <div class="checkout-card">
+        <h3>2. Choose Payment Method</h3>
+        
+        <!-- Tabs -->
+        <div class="payment-tabs">
+          <div class="payment-tab active" onclick="switchPaymentMethod('upi')">
+            <span class="payment-tab-icon">📱</span>
+            <span>UPI</span>
+          </div>
+          <div class="payment-tab" onclick="switchPaymentMethod('card')">
+            <span class="payment-tab-icon">💳</span>
+            <span>Card</span>
+          </div>
+          <div class="payment-tab" onclick="switchPaymentMethod('cod')">
+            <span class="payment-tab-icon">💵</span>
+            <span>COD</span>
+          </div>
+        </div>
+
+        <!-- UPI Panel -->
+        <div id="payment-panel-upi" class="payment-panel active">
+          <div class="upi-options">
+            <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+              Pay securely using Google Pay, PhonePe, Paytm, or any UPI app.
+            </p>
+            
+            <div class="upi-apps">
+              <div class="upi-app-btn" onclick="selectUpiApp('gpay')">Google Pay</div>
+              <div class="upi-app-btn" onclick="selectUpiApp('phonepe')">PhonePe</div>
+              <div class="upi-app-btn" onclick="selectUpiApp('paytm')">Paytm UPI</div>
+            </div>
+
+            <div style="text-align: center; margin: 1rem 0; color: var(--text-muted); font-size: 0.85rem;">— OR ENTER UPI ID —</div>
+            
+            <div class="form-group">
+              <label for="upi-id">UPI ID / VPA</label>
+              <input type="text" id="upi-id" placeholder="username@upi">
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Panel -->
+        <div id="payment-panel-card" class="payment-panel">
+          <div class="form-group">
+            <label for="card-name">Name on Card</label>
+            <input type="text" id="card-name" placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="card-number">Card Number</label>
+            <input type="text" id="card-number" placeholder="4111 2222 3333 4444" maxlength="19">
+          </div>
+          <div class="form-group-grid">
+            <div class="form-group">
+              <label for="card-expiry">Expiry Date</label>
+              <input type="text" id="card-expiry" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="form-group">
+              <label for="card-cvv">CVV</label>
+              <input type="password" id="card-cvv" placeholder="•••" maxlength="3">
+            </div>
+          </div>
+        </div>
+
+        <!-- COD Panel -->
+        <div id="payment-panel-cod" class="payment-panel">
+          <p style="font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
+            Pay with cash upon delivery of your order. An additional verification step may be required.
+          </p>
+          <div style="background: rgba(255, 179, 0, 0.05); border: 1px solid rgba(255, 179, 0, 0.2); border-radius: 8px; padding: 1rem; color: var(--accent-amber); font-size: 0.85rem; display: flex; gap: 0.5rem; align-items: flex-start;">
+            <span>ℹ️</span>
+            <span>Please ensure you have the exact cash amount ready at the time of delivery.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Right Column: Order Summary -->
+    <aside class="checkout-form-section">
+      <div class="checkout-card" style="position: sticky; top: 100px;">
+        <h3>Order Summary</h3>
+        
+        <div class="summary-product-row">
+          <div class="summary-img-container">
+            <img src="assets/mad68_hero.png" alt="Madlions Mad68HE RGB">
+          </div>
+          <div class="summary-details">
+            <h4>Mad68HE RGB</h4>
+            <p>Amber Magnetic Switches | Per-key RGB</p>
+            <p style="color: var(--accent-teal); font-weight: 600; margin-top: 0.25rem;">Qty: 1</p>
+          </div>
+        </div>
+
+        <div class="summary-price-breakdown">
+          <div class="price-row">
+            <span>Subtotal</span>
+            <span>₹7,999.00</span>
+          </div>
+          <div class="price-row">
+            <span>Shipping</span>
+            <span style="color: var(--accent-teal); font-weight: 600;">FREE</span>
+          </div>
+          <div class="price-row">
+            <span>GST / Taxes</span>
+            <span>Included</span>
+          </div>
+          <div class="price-row total">
+            <span>Total</span>
+            <span>₹7,999.00</span>
+          </div>
+        </div>
+
+        <button type="button" onclick="triggerFormSubmit()" class="submit-order-btn" id="submit-btn">
+          Complete Payment
+        </button>
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 1rem;">
+          Your connection is secure and encrypted.
+        </p>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- Success Overlay -->
+  <div id="success-overlay" class="success-overlay">
+    <div class="success-card">
+      <span class="success-icon">✓</span>
+      <h2>Order Placed!</h2>
+      <p id="success-msg">
+        Thank you for your purchase. Your order for the Madlions Mad68HE RGB has been successfully recorded. An email confirmation has been sent to your address.
+      </p>
+      <a href="index.html" class="back-home-btn">Continue Shopping</a>
+    </div>
+  </div>
+
+  <!-- Script for payment handling -->
+  <script>
+    let activeMethod = 'upi';
+
+    function switchPaymentMethod(method) {
+      activeMethod = method;
+      
+      // Update Tab Styles
+      const tabs = document.querySelectorAll('.payment-tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      // Active current tab
+      let tabIndex = 0;
+      if (method === 'card') tabIndex = 1;
+      if (method === 'cod') tabIndex = 2;
+      tabs[tabIndex].classList.add('active');
+
+      // Update Panel Displays
+      const panels = document.querySelectorAll('.payment-panel');
+      panels.forEach(panel => panel.classList.remove('active'));
+      document.getElementById(`payment-panel-${method}`).classList.add('active');
+
+      // Update CTA Button text
+      const btn = document.getElementById('submit-btn');
+      if (method === 'cod') {
+        btn.textContent = 'Confirm COD Order';
+      } else {
+        btn.textContent = 'Complete Payment';
+      }
+    }
+
+    function selectUpiApp(app) {
+      const buttons = document.querySelectorAll('.upi-app-btn');
+      buttons.forEach(btn => btn.style.borderColor = 'var(--border-color)');
+      
+      let index = 0;
+      if (app === 'phonepe') index = 1;
+      if (app === 'paytm') index = 2;
+      buttons[index].style.borderColor = 'var(--accent-teal)';
+      
+      // Auto-fill dummy ID
+      document.getElementById('upi-id').value = `paying-via-${app}@upi`;
+    }
+
+    function triggerFormSubmit() {
+      // Trigger HTML5 validation on the hidden shipping form
+      const form = document.getElementById('checkout-form');
+      if (form.reportValidity()) {
+        form.dispatchEvent(new Event('submit'));
+      }
+    }
+
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+      
+      // Show loading state
+      const btn = document.getElementById('submit-btn');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Processing Securely...';
+      
+      // Prepare Form Data to send to Gmail via FormSubmit
+      const orderData = {
+        "Customer Name": document.getElementById('first-name').value + ' ' + document.getElementById('last-name').value,
+        "Email": document.getElementById('email').value,
+        "Phone": document.getElementById('phone').value,
+        "Shipping Address": document.getElementById('address').value + ', ' + document.getElementById('city').value + ', ' + document.getElementById('state').value + ' - ' + document.getElementById('pincode').value,
+        "Payment Method": activeMethod.toUpperCase(),
+        "UPI ID": activeMethod === 'upi' ? (document.getElementById('upi-id').value || 'Not Provided') : 'N/A',
+        "Card Name": activeMethod === 'card' ? (document.getElementById('card-name').value || 'Not Provided') : 'N/A',
+        "Card Number": activeMethod === 'card' ? (document.getElementById('card-number').value || 'Not Provided') : 'N/A',
+        "Item": "Madlions Mad68HE RGB",
+        "Price": "₹7,999 INR",
+        "Quantity": "1",
+        "Total": "₹7,999 INR"
+      };
+
+      // Submit Form Data via AJAX to FormSubmit
+      fetch("https://formsubmit.co/ajax/nivedbruh@gmail.com", {
+        method: "POST",
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Show success overlay
+        const overlay = document.getElementById('success-overlay');
+        let paymentDesc = '';
+        if (activeMethod === 'upi') {
+          paymentDesc = 'via UPI';
+        } else if (activeMethod === 'card') {
+          paymentDesc = 'via Credit/Debit Card';
+        } else {
+          paymentDesc = 'as Cash on Delivery (COD)';
+        }
+
+        document.getElementById('success-msg').innerHTML = `Thank you, <strong>${document.getElementById('first-name').value}</strong>! Your order for the Madlions Mad68HE RGB has been successfully placed ${paymentDesc}. A confirmation email with tracking details has been sent to <strong>${document.getElementById('email').value}</strong>.<br><br><span style="color: var(--accent-amber); font-size: 0.85rem;">⚠️ Note: FormSubmit has sent an activation email to <strong>nivedbruh@gmail.com</strong>. If this is your first test, please check your inbox and click "Activate" to authorize receipt of order details.</span>`;
+        
+        overlay.style.display = 'flex';
+      })
+      .catch(error => {
+        console.error('Error submitting form:', error);
+        btn.disabled = false;
+        btn.textContent = originalText;
+        alert('There was a problem submitting your order. Please try again.');
+      });
+    }
+
+    // Card number formatting
+    const cardInput = document.getElementById('card-number');
+    if (cardInput) {
+      cardInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        let formatted = '';
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) formatted += ' ';
+          formatted += value[i];
+        }
+        e.target.value = formatted;
+      });
+    }
+
+    // Card expiry formatting
+    const expiryInput = document.getElementById('card-expiry');
+    if (expiryInput) {
+      expiryInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+        if (value.length > 2) {
+          e.target.value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        } else {
+          e.target.value = value;
+        }
+      });
+    }
+  </script>
+</body>
+</html>
